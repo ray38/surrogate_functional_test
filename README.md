@@ -54,6 +54,8 @@
 ## Dependencies
 
 * [psi4 numpy](https://github.com/psi4/psi4numpy)
+* Keras
+* Tensorflow
 * numpy
 * scipy
 * h5py
