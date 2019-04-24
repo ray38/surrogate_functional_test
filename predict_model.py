@@ -432,7 +432,7 @@ def initialize(setup,NN_model_filename):
         NN_model = load_model(NN_model_name)
 
 
-    LDA_model = pickle.load(open(LDA_model_name, 'rb'))
+    LDA_model = pickle.load(open(LDA_model_name, 'r'))
 
     setup["NN_model"] = NN_model
     setup["LDA_model"] = LDA_model
