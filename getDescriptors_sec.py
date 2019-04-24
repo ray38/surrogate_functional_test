@@ -119,26 +119,18 @@ def process_normal_descriptors(molecule, functional,i,j,k):
     result_filename = "{}_{}_{}_{}_{}_all_descriptors.hdf5".format(molecule,functional,i,j,k)
     raw_data =  h5py.File(raw_data_filename,'r')
     n = np.asarray(raw_data['rho'])
-    V_xc = np.asarray(raw_data['V_xc'])
     ep_xc =  np.asarray(raw_data['epsilon_xc'])
-    gamma =  np.asarray(raw_data['gamma'])
-    tau =  np.asarray(raw_data['tau'])
+
     raw_data.close()
 
 
     with h5py.File(result_filename,'a') as database:
         print 'get normal'
-#        data.create_dataset('V_xc',data=V_xc)
-#        data.create_dataset('epsilon_xc',data=ep_xc)
-#        data.create_dataset('rho',data=n)
-#        data.create_dataset('gamma',data=gamma)
-#        data.create_dataset('tau',data=tau)
 
-        create_dataset(database, 'V_xc', V_xc)
+
         create_dataset(database, 'epsilon_xc', ep_xc)
         create_dataset(database, 'rho', n)
-        create_dataset(database, 'gamma', gamma)
-        create_dataset(database, 'tau', tau)
+
         
     return
 
@@ -158,46 +150,6 @@ def process_range_descriptor(molecule, functional,i,j,k,h,N,r_list,MCSH_stencil_
         except:
             MCSH_grp = data.create_group('MCSH')
         print "MCSH"
-
-
-#        try:
-#            ave_dens_grp = data['average_density']
-#        except:
-#            ave_dens_grp = data.create_group('average_density')
-#        print "Average Density"
-#
-#
-#        try:
-#            derivative_grp = data['derivative']
-#        except:
-#            derivative_grp = data.create_group('derivative')
-#        print "Derivative"
-#
-#
-#
-#        for index, r in enumerate(r_list):
-#            dataset_name = 'average_density_{}'.format(str(r).replace('.','-'))
-#            if dataset_name not in ave_dens_grp.keys():
-#                temp_data, temp_pad = calculate_ave_density_desc(extented_n.copy(),r,h,h,h,stencil_list[index],pad_list[index])
-#                ave_dens_grp.create_dataset(dataset_name,data=carve_out_matrix(temp_data))
-        
-
-
-#        if 'derivative_1' not in derivative_grp.keys():
-#            temp_first_deri, temp_pad = get_differenciation_conv(extented_n.copy(), h, h, h, gradient = 'first',
-#                                               stencil_type = 'mid', accuracy = '2')
-#            derivative_grp.create_dataset('derivative_1',data=carve_out_matrix(temp_first_deri))
-#
-#        if 'derivative_2' not in derivative_grp.keys():
-#            temp_sec_deri, temp_pad   = get_differenciation_conv(extented_n.copy(), h, h, h, gradient = 'second',
-#                                               stencil_type = 'times2', accuracy = '2')
-#            derivative_grp.create_dataset('derivative_2',data=carve_out_matrix(temp_sec_deri))
-#
-#
-#        if 'derivative_3' not in derivative_grp.keys():
-#            temp_third_deri, temp_pad = get_differenciation_conv(extented_n.copy(), h, h, h, gradient = 'third',
-#                                               stencil_type = 'times2', accuracy = '2')
-#            derivative_grp.create_dataset('derivative_3',data=carve_out_matrix(temp_third_deri))
 
 
 
@@ -278,135 +230,6 @@ def process_range_descriptor(molecule, functional,i,j,k,h,N,r_list,MCSH_stencil_
                 MCSH_grp.create_dataset(dataset_name,data=temp_result)
 
 
-
-            dataset_name = 'MCSH_3_1_{}'.format(str(r).replace('.','-'))
-            if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 3 1 ".format(r)
-                stencils = MCSH_stencil_dict["3_1"][str(r)][0]
-                pad = MCSH_stencil_dict["3_1"][str(r)][1]
-
-                temp_result = np.zeros_like(carve_out_matrix(extented_n.copy()))
-
-                for temp_stencil in stencils:
-                    temp_temp_result_extend,_ = get_fftconv_with_known_stencil_no_wrap(extented_n,h,h,h,1,temp_stencil,0)
-                    temp_temp_result = carve_out_matrix(temp_temp_result_extend)
-                    temp_result = np.add(temp_result, np.square(temp_temp_result))
-
-                temp_result = np.sqrt(temp_result)
-
-                MCSH_grp.create_dataset(dataset_name,data=temp_result)
-
-            dataset_name = 'MCSH_3_2_{}'.format(str(r).replace('.','-'))
-            if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 3 2 ".format(r)
-                stencils = MCSH_stencil_dict["3_2"][str(r)][0]
-                pad = MCSH_stencil_dict["3_2"][str(r)][1]
-
-                temp_result = np.zeros_like(carve_out_matrix(extented_n.copy()))
-
-                for temp_stencil in stencils:
-                    temp_temp_result_extend,_ = get_fftconv_with_known_stencil_no_wrap(extented_n,h,h,h,1,temp_stencil,0)
-                    temp_temp_result = carve_out_matrix(temp_temp_result_extend)
-                    temp_result = np.add(temp_result, np.square(temp_temp_result))
-
-                temp_result = np.sqrt(temp_result)
-
-                MCSH_grp.create_dataset(dataset_name,data=temp_result)
-
-
-            dataset_name = 'MCSH_3_3_{}'.format(str(r).replace('.','-'))
-            if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 3 3 ".format(r)
-                stencils = MCSH_stencil_dict["3_3"][str(r)][0]
-                pad = MCSH_stencil_dict["3_3"][str(r)][1]
-
-                temp_result = np.zeros_like(carve_out_matrix(extented_n.copy()))
-
-                for temp_stencil in stencils:
-                    temp_temp_result_extend,_ = get_fftconv_with_known_stencil_no_wrap(extented_n,h,h,h,1,temp_stencil,0)
-                    temp_temp_result = carve_out_matrix(temp_temp_result_extend)
-                    temp_result = np.add(temp_result, np.square(temp_temp_result))
-
-                temp_result = np.sqrt(temp_result)
-
-                MCSH_grp.create_dataset(dataset_name,data=temp_result)
-
-
-
-
-
-
-            dataset_name = 'MCSH_4_1_{}'.format(str(r).replace('.','-'))
-            if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 4 1 ".format(r)
-                stencils = MCSH_stencil_dict["4_1"][str(r)][0]
-                pad = MCSH_stencil_dict["4_1"][str(r)][1]
-
-                temp_result = np.zeros_like(carve_out_matrix(extented_n.copy()))
-
-                for temp_stencil in stencils:
-                    temp_temp_result_extend,_ = get_fftconv_with_known_stencil_no_wrap(extented_n,h,h,h,1,temp_stencil,0)
-                    temp_temp_result = carve_out_matrix(temp_temp_result_extend)
-                    temp_result = np.add(temp_result, np.square(temp_temp_result))
-
-                temp_result = np.sqrt(temp_result)
-
-                MCSH_grp.create_dataset(dataset_name,data=temp_result)
-
-            dataset_name = 'MCSH_4_2_{}'.format(str(r).replace('.','-'))
-            if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 4 2 ".format(r)
-                stencils = MCSH_stencil_dict["4_2"][str(r)][0]
-                pad = MCSH_stencil_dict["4_2"][str(r)][1]
-
-                temp_result = np.zeros_like(carve_out_matrix(extented_n.copy()))
-
-                for temp_stencil in stencils:
-                    temp_temp_result_extend,_ = get_fftconv_with_known_stencil_no_wrap(extented_n,h,h,h,1,temp_stencil,0)
-                    temp_temp_result = carve_out_matrix(temp_temp_result_extend)
-                    temp_result = np.add(temp_result, np.square(temp_temp_result))
-
-                temp_result = np.sqrt(temp_result)
-
-                MCSH_grp.create_dataset(dataset_name,data=temp_result)
-
-
-            dataset_name = 'MCSH_4_3_{}'.format(str(r).replace('.','-'))
-            if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 4 3 ".format(r)
-                stencils = MCSH_stencil_dict["4_3"][str(r)][0]
-                pad = MCSH_stencil_dict["4_3"][str(r)][1]
-
-                temp_result = np.zeros_like(carve_out_matrix(extented_n.copy()))
-
-                for temp_stencil in stencils:
-                    temp_temp_result_extend,_ = get_fftconv_with_known_stencil_no_wrap(extented_n,h,h,h,1,temp_stencil,0)
-                    temp_temp_result = carve_out_matrix(temp_temp_result_extend)
-                    temp_result = np.add(temp_result, np.square(temp_temp_result))
-
-                temp_result = np.sqrt(temp_result)
-
-                MCSH_grp.create_dataset(dataset_name,data=temp_result)
-
-
-            dataset_name = 'MCSH_4_4_{}'.format(str(r).replace('.','-'))
-            if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 4 4 ".format(r)
-                stencils = MCSH_stencil_dict["4_4"][str(r)][0]
-                pad = MCSH_stencil_dict["4_4"][str(r)][1]
-
-                temp_result = np.zeros_like(carve_out_matrix(extented_n.copy()))
-
-                for temp_stencil in stencils:
-                    temp_temp_result_extend,_ = get_fftconv_with_known_stencil_no_wrap(extented_n,h,h,h,1,temp_stencil,0)
-                    temp_temp_result = carve_out_matrix(temp_temp_result_extend)
-                    temp_result = np.add(temp_result, np.square(temp_temp_result))
-
-                temp_result = np.sqrt(temp_result)
-
-                MCSH_grp.create_dataset(dataset_name,data=temp_result)
-
-
         
     return
 
@@ -422,14 +245,7 @@ def prepare_MCSH_stencils(r_list,h):
     MCSH_stencil_dict["1_1"] = {}
     MCSH_stencil_dict["2_1"] = {}
     MCSH_stencil_dict["2_2"] = {}
-    MCSH_stencil_dict["3_1"] = {}
-    MCSH_stencil_dict["3_2"] = {}
-    MCSH_stencil_dict["3_3"] = {}
 
-    MCSH_stencil_dict["4_1"] = {}
-    MCSH_stencil_dict["4_2"] = {}
-    MCSH_stencil_dict["4_3"] = {}
-    MCSH_stencil_dict["4_4"] = {}
 
     for r in r_list:
 
@@ -459,57 +275,6 @@ def prepare_MCSH_stencils(r_list,h):
         stencil_Re_2_5, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 2, 5, accuracy = 6)
         MCSH_stencil_dict["2_2"][str(r)] = [[stencil_Re_2_2,stencil_Re_2_3,stencil_Re_2_5], pad ]
 
-    for r in r_list:
-
-
-        stencil_Re_3_2, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 2, accuracy = 6)
-        stencil_Re_3_3, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 3, accuracy = 6)
-        stencil_Re_3_4, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 4, accuracy = 6)
-        stencil_Re_3_6, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 6, accuracy = 6)
-        stencil_Re_3_8, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 8, accuracy = 6)
-        stencil_Re_3_9, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 9, accuracy = 6)
-        MCSH_stencil_dict["3_1"][str(r)] = [[stencil_Re_3_2,stencil_Re_3_3,stencil_Re_3_4,stencil_Re_3_6,stencil_Re_3_8,stencil_Re_3_9], pad ]
-
-
-        stencil_Re_3_1, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 1, accuracy = 6)
-        stencil_Re_3_7, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 7, accuracy = 6)
-        stencil_Re_3_10, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 10, accuracy = 6)
-        MCSH_stencil_dict["3_2"][str(r)] = [[stencil_Re_3_1,stencil_Re_3_7,stencil_Re_3_10], pad ]
-
-
-        stencil_Re_3_5, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 3, 5, accuracy = 6)
-        MCSH_stencil_dict["3_3"][str(r)] = [[stencil_Re_3_5], pad ]
-
-
-    for r in r_list:
-
-        stencil_Re_4_1, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 1, accuracy = 6)
-        stencil_Re_4_11, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 11, accuracy = 6)
-        stencil_Re_4_15, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 15, accuracy = 6)
-        MCSH_stencil_dict["4_1"][str(r)] = [[stencil_Re_4_1,stencil_Re_4_11,stencil_Re_4_15], pad ]
-
-
-        stencil_Re_4_2, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 2, accuracy = 6)
-        stencil_Re_4_3, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 3, accuracy = 6)
-        stencil_Re_4_7, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 7, accuracy = 6)
-        stencil_Re_4_10, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 10, accuracy = 6)
-        stencil_Re_4_12, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 12, accuracy = 6)
-        stencil_Re_4_14, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 14, accuracy = 6)
-        MCSH_stencil_dict["4_2"][str(r)] = [[stencil_Re_4_2,stencil_Re_4_3,stencil_Re_4_7,stencil_Re_4_10,stencil_Re_4_12,stencil_Re_4_14], pad ]
-
-
-        stencil_Re_4_4, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 4, accuracy = 6)
-        stencil_Re_4_6, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 6, accuracy = 6)
-        stencil_Re_4_13, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 13, accuracy = 6)
-        MCSH_stencil_dict["4_3"][str(r)] = [[stencil_Re_4_4,stencil_Re_4_6,stencil_Re_4_13], pad ]
-
-
-
-
-        stencil_Re_4_5, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 5, accuracy = 6)
-        stencil_Re_4_8, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 8, accuracy = 6)
-        stencil_Re_4_9, pad =  calc_MC_surface_harmonic_stencil(h, h, h, r, 4, 9, accuracy = 6)
-        MCSH_stencil_dict["4_4"][str(r)] = [[stencil_Re_4_5,stencil_Re_4_8,stencil_Re_4_9], pad ]
 
     return MCSH_stencil_dict
 

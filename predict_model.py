@@ -332,35 +332,6 @@ def load_data_each_block(molecule,functional,i,j,k, dataset_setup, data_dir_full
     except:
         pass
 
-    try:
-        temp_list = dataset_setup["MCSH_3_1_r_list"]
-        if len(temp_list) > 0:
-            for r_list_count in temp_list:
-                dataset_name = 'MCSH_3_1_{}'.format(str(r_list_count).replace('.','-'))
-                temp_data = np.asarray(data[group_name][dataset_name])
-                result_list.append(transform_data(temp_data, dataset_setup['MCSH_3_1_transform']))
-    except:
-        pass
-
-    try:
-        temp_list = dataset_setup["MCSH_3_2_r_list"]
-        if len(temp_list) > 0:
-            for r_list_count in temp_list:
-                dataset_name = 'MCSH_3_2_{}'.format(str(r_list_count).replace('.','-'))
-                temp_data = np.asarray(data[group_name][dataset_name])
-                result_list.append(transform_data(temp_data, dataset_setup['MCSH_3_2_transform']))
-    except:
-        pass
-
-    try:
-        temp_list = dataset_setup["MCSH_3_3_r_list"]
-        if len(temp_list) > 0:
-            for r_list_count in temp_list:
-                dataset_name = 'MCSH_3_3_{}'.format(str(r_list_count).replace('.','-'))
-                temp_data = np.asarray(data[group_name][dataset_name])
-                result_list.append(transform_data(temp_data, dataset_setup['MCSH_3_3_transform']))
-    except:
-        pass
 
 
 
@@ -463,37 +434,15 @@ def initialize(setup,NN_model_filename):
     NN_model_name = NN_model_filename
     #NN_model_name = "NN.h5"
 
-    if NN_model_name == "NN.h5":
 
-        loss_value,loss = get_start_loss(fit_log_name)
-        predict_log_name = "predict_{}_{}_log.log".format(loss,loss_value)
-        predict_full_log_name = "predict_{}_{}_full_log.log".format(loss,loss_value)
-        predict_error_log_name = "predict_{}_{}_error_log.log".format(loss,loss_value)
-        predict_formation_log_name = "predict_{}_{}_formation_log.log".format(loss,loss_value)
-        try:
-            NN_model = load_model(NN_model_name, custom_objects={'sae': sae})
-        except:
-            NN_model = load_model(NN_model_name)
-        NN_model.save("NN_{}_{}_backup.h5".format(loss,loss_value))
-
-
-    else:
-        temp = NN_model_name.split("_")
-        if temp[1] == "mean" and temp[2] == "absolute" and temp[3] == "percentage":
-            loss = "mean_absolute_percentage_error"
-            loss_value = temp[5]
-        else:
-            loss = temp[1]
-            loss_value = temp[2]
-        predict_log_name = "predict_{}_{}_log.log".format(loss,loss_value)
-        predict_full_log_name = "predict_{}_{}_full_log.log".format(loss,loss_value)
-        predict_error_log_name = "predict_{}_{}_error_log.log".format(loss,loss_value)
-        predict_formation_log_name = "predict_{}_{}_formation_log.log".format(loss,loss_value)
-        try:
-            NN_model = load_model(NN_model_name, custom_objects={'sae': sae})
-        except:
-            NN_model = load_model(NN_model_name)
-
+    predict_log_name = "predict_log.log"
+    predict_full_log_name = "predic_full_log.log"
+    predict_error_log_name = "predict_error_log.log"
+    predict_formation_log_name = "predict_formation_log.log"
+    try:
+        NN_model = load_model(NN_model_name, custom_objects={'sae': sae})
+    except:
+        NN_model = load_model(NN_model_name)
 
 
     LDA_model = pickle.load(open(LDA_model_name, 'rb'))
@@ -621,7 +570,7 @@ if __name__ == "__main__":
 
     setup["dataset_setup"] = dataset_setup
 
-    working_dir = os.getcwd()  + '/' + dataset_name
+    working_dir = os.getcwd()  + '/models/' + dataset_name
     setup["working_dir"] = working_dir
 
     model_save_dir = working_dir + "/" + "NN_{}_{}_{}_{}".format(setup["fit_type"],setup["NN_setup"]["number_neuron_per_layer"], setup["NN_setup"]["number_layers"], setup["NN_setup"]["activation"])
