@@ -11,7 +11,7 @@ Created on Thu Oct 12 13:56:12 2017
 
 @author: ray
 """
-
+from __future__ import print_function
 import os
 import itertools
 import h5py
@@ -55,7 +55,7 @@ def convert_formation_energies(energy_dict,atomic_references,composition_dict):
     e = []
     ref_offsets = {}
     atoms = sorted(atomic_references)
-    print atoms
+    print( atoms)
     for i,a in enumerate(atoms):
         composition = composition_dict[atomic_references[a]]
         e.append(energy_dict[atomic_references[a]])
@@ -209,8 +209,8 @@ def load_data_each_block(molecule,functional,i,j,k, dataset_setup, data_dir_full
 
     os.chdir(data_dir_full)
 
-    print data_dir_full
-    print os.getcwd()
+    print( data_dir_full)
+    print( os.getcwd())
 
     data =  h5py.File(data_filename,'r')
     
@@ -338,14 +338,14 @@ def load_data_each_block(molecule,functional,i,j,k, dataset_setup, data_dir_full
     result = zip(*result_list)
     y = zip(*y)
     dens = zip(*dens)
-    print "done loading: {} {} {}".format(i,j,k)
+    print( "done loading: {} {} {}".format(i,j,k))
 
     os.chdir(setup["model_save_dir"])
     return np.asarray(dens), np.asarray(result), np.asarray(y)
 
 
 def process_each_block(molecule, i,j,k, setup, data_dir_full):
-    print 'started'
+    print( 'started')
 
     h = float(setup['grid_spacing'])
     L = float(setup['box_dimension'])
@@ -540,7 +540,7 @@ if __name__ == "__main__":
 
 
 
-    print "start"
+    print( "start")
     predict_setup_filename = sys.argv[1]
     dataset_setup_database_filename = sys.argv[2]
     dataset_name = sys.argv[3]
@@ -621,7 +621,7 @@ if __name__ == "__main__":
 
 
 
-    print setup["result_data"]
+    print( setup["result_data"])
 
     
     for molecule in setup["molecule_list"]:
@@ -661,7 +661,7 @@ if __name__ == "__main__":
     composition_dict = {}
     for molecule in setup["result_data"]:
         if 'composition' in setup["result_data"][molecule] and 'predict_exc' in setup["result_data"][molecule] and 'original_exc' in setup["result_data"][molecule]:
-            print molecule
+            print( molecule)
             original_energy_dict[molecule] = setup["result_data"][molecule]['original_exc']
 
                                     
@@ -701,10 +701,10 @@ if __name__ == "__main__":
             writer.writerow(temp)
 
 
-    print '{:10}\t{}\t{}'.format('name', 'form. E. 1', 'form. E. 2')
-    print '--------- 1: predicted xc energy  2: psi4 xc energy projected on fd-grid\n'
+    print( '{:10}\t{}\t{}'.format('name', 'form. E. 1', 'form. E. 2'))
+    print( '--------- 1: predicted xc energy  2: psi4 xc energy projected on fd-grid\n')
     #for key in formation_energies_original_en.keys():
     for key in ["C2H2", "C2H4", "C2H6", "CH3OH", "CH4", "CO", "CO2", "H2", "H2O", "HCN", "HNC", "N2", "N2O", "NH3", "O3", "NCCN", "N2H4", "HCOOH", "H2O2", "H2CO", "H2CCO", "glycine", "CH3CHO", "CH3CN", "CH3NO2"]:
         #print '{:10}\t{:8.5f}\t{:8.5f}'.format(key,formation_energies_original_en[key],formation_energies_predict_en[key])
-        print '{}\t{}\t{}\t{}\t{}\t{}'.format(key,compound_original_en_dict[key][0],compound_predict_en_dict[key][0],formation_energies_original_en[key][0],formation_energies_predict_en[key][0], setup["result_data"][key]['sum_absolute_error'])
+        print( '{}\t{}\t{}\t{}\t{}\t{}'.format(key,compound_original_en_dict[key][0],compound_predict_en_dict[key][0],formation_energies_original_en[key][0],formation_energies_predict_en[key][0], setup["result_data"][key]['sum_absolute_error']))
 

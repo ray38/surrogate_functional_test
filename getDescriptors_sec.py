@@ -4,7 +4,7 @@ Created on Tue Aug 15 15:53:10 2017
 
 @author: ray
 """
-
+from __future__ import print_function
 import numpy as np
 import sys
 import math
@@ -44,7 +44,7 @@ def read_system(mol,xc,Nx_center,Ny_center,Nz_center,Nx,Ny,Nz,data_name):
     
     temp_x = None
     x_start = True
-    print Nx_list, Ny_list,Nz_list
+    print( Nx_list, Ny_list,Nz_list)
     for i in Nx_list:
         
         temp_y = None
@@ -101,7 +101,7 @@ def get_homo_nondimensional_nave(int_arr, n_ave, r):
 
 
 def calculate_ave_density_desc(n,r,hx,hy,hz,stencil,pad):
-    print 'start ave dens desc : ' + str(r) 
+    print( 'start ave dens desc : ' + str(r) )
 #    integration, temp_pad  = get_integration_fftconv(n, hx, hy, hz, r, accuracy = get_auto_accuracy(hx,hy,hz, r))
     integration, temp_pad = get_fftconv_with_known_stencil_no_wrap(n,hx,hy,hz,r,stencil,pad)
     ave_density = get_homo_nondimensional_nave(integration, 1.0, r)
@@ -125,7 +125,7 @@ def process_normal_descriptors(molecule, functional,i,j,k):
 
 
     with h5py.File(result_filename,'a') as database:
-        print 'get normal'
+        print( 'get normal')
 
 
         create_dataset(database, 'epsilon_xc', ep_xc)
@@ -149,7 +149,7 @@ def process_range_descriptor(molecule, functional,i,j,k,h,N,r_list,MCSH_stencil_
             MCSH_grp = data['MCSH']
         except:
             MCSH_grp = data.create_group('MCSH')
-        print "MCSH"
+        print( "MCSH")
 
 
 
@@ -157,7 +157,7 @@ def process_range_descriptor(molecule, functional,i,j,k,h,N,r_list,MCSH_stencil_
 
             dataset_name = 'MCSH_0_1_{}'.format(str(r).replace('.','-'))
             if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 0 1 ".format(r)
+                print( "start: {} MCSH 0 1 ".format(r))
                 stencils = MCSH_stencil_dict["0_1"][str(r)][0]
                 pad = MCSH_stencil_dict["0_1"][str(r)][1]
 
@@ -176,7 +176,7 @@ def process_range_descriptor(molecule, functional,i,j,k,h,N,r_list,MCSH_stencil_
 
             dataset_name = 'MCSH_1_1_{}'.format(str(r).replace('.','-'))
             if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 1 1 ".format(r)
+                print( "start: {} MCSH 1 1 ".format(r))
                 stencils = MCSH_stencil_dict["1_1"][str(r)][0]
                 pad = MCSH_stencil_dict["1_1"][str(r)][1]
 
@@ -197,7 +197,7 @@ def process_range_descriptor(molecule, functional,i,j,k,h,N,r_list,MCSH_stencil_
 
             dataset_name = 'MCSH_2_1_{}'.format(str(r).replace('.','-'))
             if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 2 1 ".format(r)
+                print( "start: {} MCSH 2 1 ".format(r))
                 stencils = MCSH_stencil_dict["2_1"][str(r)][0]
                 pad = MCSH_stencil_dict["2_1"][str(r)][1]
 
@@ -214,7 +214,7 @@ def process_range_descriptor(molecule, functional,i,j,k,h,N,r_list,MCSH_stencil_
 
             dataset_name = 'MCSH_2_2_{}'.format(str(r).replace('.','-'))
             if dataset_name not in MCSH_grp.keys():
-                print "start: {} MCSH 2 2 ".format(r)
+                print( "start: {} MCSH 2 2 ".format(r))
                 stencils = MCSH_stencil_dict["2_2"][str(r)][0]
                 pad = MCSH_stencil_dict["2_2"][str(r)][1]
 
@@ -283,7 +283,7 @@ def prepare_MCSH_stencils(r_list,h):
 def process(molecule, functional,i,j,k,h,N,r_list,MC_surface_harmonic_stencil_dict):
     result_filename = "{}_{}_{}_{}_{}_all_descriptors.hdf5".format(molecule,functional,i,j,k)
     #if os.path.isfile(result_filename) == False:
-    print 'start {} {} {}'.format(i,j,k)
+    print( 'start {} {} {}'.format(i,j,k))
     process_normal_descriptors(molecule, functional,i,j,k)
     process_range_descriptor(molecule, functional,i,j,k,h,N,r_list,MC_surface_harmonic_stencil_dict)
     
@@ -292,10 +292,10 @@ def process_one_molecule(molecule, functional,h,L,N,r_list):
     cwd = os.getcwd()
     database_dir_name = "molecule_database"
     dir_name = "{}_{}_{}_{}_{}".format(molecule,functional,str(L).replace('.','-'),str(h).replace('.','-'),N)
-    print dir_name
+    print( dir_name)
     
     if os.path.isdir(cwd + '/' + database_dir_name + "/" + dir_name) == False:
-        print '\n****Error: Cant find the directory! ****\n'
+        print( '\n****Error: Cant find the directory! ****\n')
         raise NotImplementedError
     
     os.chdir(cwd + '/' + database_dir_name + "/" + dir_name)
@@ -322,7 +322,7 @@ def process_one_molecule(molecule, functional,h,L,N,r_list):
 
 if __name__ == "__main__":
 
-    print "start adding dataset"
+    print( "start adding dataset")
 
     setup_filename = sys.argv[1]
 
@@ -330,11 +330,11 @@ if __name__ == "__main__":
     with open(setup_filename) as f:
         setup = json.load(f)
 
-    print setup
+    print( setup)
 
     
     molecule = sys.argv[2]
-    print "start"
+    print( "start")
     h = float(setup['grid_spacing'])
     L = float(setup['box_dimension'])
     N = int(setup['number_segment_per_side'])
@@ -342,5 +342,5 @@ if __name__ == "__main__":
     r_list = setup['r_list']
 
     #for functional in functionals:
-    print "start process molecule"
+    print( "start process molecule")
     process_one_molecule(molecule, functional,h,L,N,r_list)

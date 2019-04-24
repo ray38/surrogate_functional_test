@@ -4,7 +4,7 @@ Created on Mon Feb 13 14:48:37 2017
 
 @author: ray
 """
-
+from __future__ import print_function
 import numpy as np
 from scipy.ndimage.filters import convolve
 from scipy.signal import fftconvolve
@@ -608,7 +608,7 @@ def calc_integration_stencil2(hx, hy, hz, r, accuracy):
     temp_center_y = hy / 2.
     temp_center_z = hz / 2.
     temp_center_coord = [temp_center_x, temp_center_y, temp_center_z]
-    print temp_center_coord
+    print( temp_center_coord)
     r2 = r*r
     for index, x in np.ndenumerate(temp_stencil):
        temp_stencil[index[0]][index[1]][index[2]] = determine_dv_in_sphere_ratio(temp_coord_arr[index[0]][index[1]][index[2]], temp_center_coord,r2, 1, accuracy)
@@ -855,7 +855,7 @@ def calc_harmonic_stencil(hx, hy, hz, r, l, m, accuracy = 5):
     dim_y = int(2.* math.ceil( r/hy )) + 1
     dim_z = int(2.* math.ceil( r/hz )) + 1
 
-    print dim_x, dim_y, dim_z
+    print( dim_x, dim_y, dim_z)
 
     stencil_Re = np.zeros((dim_x, dim_y, dim_z))
     stencil_Im = np.zeros((dim_x, dim_y, dim_z))
@@ -1038,7 +1038,7 @@ def calc_MC_surface_harmonic_stencil(hx, hy, hz, r, l, m, accuracy = 5):
     dim_y = int(2.* math.ceil( r/hy )) + 1
     dim_z = int(2.* math.ceil( r/hz )) + 1
 
-    print dim_x, dim_y, dim_z
+    print( dim_x, dim_y, dim_z)
 
     stencil_Re = np.zeros((dim_x, dim_y, dim_z))
     stencil_Im = np.zeros((dim_x, dim_y, dim_z))
@@ -1216,7 +1216,7 @@ def calc_MC_surface_harmonic_stencil_n(hx, hy, hz, r, l, n, accuracy = 5):
     dim_y = int(2.* math.ceil( r/hy )) + 1
     dim_z = int(2.* math.ceil( r/hz )) + 1
 
-    print dim_x, dim_y, dim_z
+    print( dim_x, dim_y, dim_z)
 
     stencil_Re = np.zeros((dim_x, dim_y, dim_z))
     stencil_Im = np.zeros((dim_x, dim_y, dim_z))
