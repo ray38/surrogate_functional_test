@@ -4,7 +4,9 @@
 
 1. Use Psi4 to calculate moleule of interest at B3LYP/aug-cc-pvtz level of theory, and project the SCF converged density and XC energy density on a grid.
 
+
 ` python psi4_generate_data_set.py <database for molecule coord> <molecule name> <h> <L> <N>`
+
 
 	..* <database for molecule coord>: provided, the `molecule_coord_database.json`. if you wish to test additional systems that's not defined in this file, please follow the same format
 	..* <molecule name>: name of the molecule as defined in the database
@@ -16,7 +18,9 @@
 
 2. Calculate the MCSH convolutional descriptors.
 
+
 ` python getDescriptors_sec.py <setup filename> <molecule name>`
+
 
 	..* <setup filename>: setup file for calculating descriptors. a sample file is provided at `/setup_files/10-0_0-02_5_MCSH_descriptor_generation_setup.json`
 	..* <molecule name>: name of the molecule as defined in the database
@@ -25,8 +29,10 @@
 
 3. Predict the energy with the model provided.
 
+
 `python predict_model.py <predict setup> <descriptor set definition database> <descriptor set name>`
 	
+
 	..* <predict setup>: setup for the prediction. An example can be found at `/setup_files/10-0_0-02_5_predict_100_2_relu_setup_LDAres_1M_setup.json`. Please modify the setup file for the right **database path**, **box dimension settings** and **list of molecules**
 	..* <descriptor set definition database>: provided, "descriptor_set_database.json"
 	..* <descriptor set name>: models for 4 desciptor sets are provided, so please choose between them: "epxc_MCSH_1_0-08_real_real", "epxc_MCSH_1_0-08_real_real", "epxc_MCSH_1_0-20_real_real", "epxc_MCSH_2_0-08_real_real","epxc_MCSH_1_0-20_real_real"
