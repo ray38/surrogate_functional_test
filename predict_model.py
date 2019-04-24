@@ -1,16 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Oct 26 16:12:24 2017
-
-@author: ray
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Oct 12 13:56:12 2017
-
-@author: ray
-"""
 from __future__ import print_function
 import os
 import itertools
