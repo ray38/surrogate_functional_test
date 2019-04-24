@@ -565,9 +565,9 @@ if __name__ == "__main__":
 
 
     database_name = setup["database_directory"]
-    sub_database_name = "{}_{}_{}".format(str(L).replace('.','-'),str(h).replace('.','-'),N)
+    #sub_database_name = "{}_{}_{}".format(str(L).replace('.','-'),str(h).replace('.','-'),N)
 
-    setup["sub_database"] = database_name + '/' + sub_database_name
+    setup["sub_database"] = database_name #+ '/' + sub_database_name
 
     initialize(setup,NN_model_filename)
 
